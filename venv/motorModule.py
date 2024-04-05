@@ -88,6 +88,8 @@ def main():
     
 # GPIO PINS and allows script to be executed directly from this module for testing
 if __name__ == '__main__':
-    motor1 = Motor(4, 17, 27, 1, 1, 1)
-    motor2 = Motor(16, 20, 21, 1, 1, 1)
+    #right side
+    motor1 = Motor(16, 20, 21, 11, 10, 9)
+    #left side
+    motor2 = Motor(4, 17, 27, 12, 1, 7)
     main()
