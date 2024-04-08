@@ -45,8 +45,9 @@ def getLaneCurve(img, display = 2):
     cv2.imshow('Masked Image', imgMask)
     cv2.imshow('Video',img)
 
-    if abs(curve) > 1:
-        round(curve)
+    # Doesn't allow a curve greater than 100
+    if abs(curve) > 100:
+        round(curve, -2)
     return None
     
 
