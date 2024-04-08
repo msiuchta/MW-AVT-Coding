@@ -32,18 +32,29 @@ def getLaneCurve(img, display = 2):
     print(curve)
 
     ## TODO: Make it look pretty
+
     #print(img)
     #print("moo")
     #print(imgWarp)
-    #cv2.imshow('Image | Warp Points | Graphed Points', np.hstack([img,imgWarpPoints,imgHist]))
-    #cv2.imshow('Masked Image | Warped Image', np.hstack([imgMask,imgWarp]))
-    #cv2.imshow('Masked Image', np.vstack((np.hstack([img,imgWarpPoints]), np.hstack([imgMask,imgWarp]))))
-    
-    cv2.imshow('Graphed Points', imgHist)
-    cv2.imshow('Warped Image',imgWarp)
-    cv2.imshow('Warped Points', imgWarpPoints)
-    cv2.imshow('Masked Image', imgMask)
-    cv2.imshow('Video',img)
+    if display != 0:
+        imgMask = cv2.cvtColor(imgMask, cv2.COLOR_GRAY2BGR)
+        imgWarp = cv2.cvtColor(imgWarp, cv2.COLOR_GRAY2BGR)
+
+        imgInvWarp = utils.warp(imgWarp, points, w, h, invert=True)
+        #imgInvWarp = cv2.cvtColor(imgInvWarp, cv2.COLOR_GRAY2BGR)
+        imgInvWarp[0:h//3, 0:w] = 0,0,0
+        imgFinal = np.zeros_like(imgInvWarp)
+        imgFinal[:] = 0,255,0
+        imgFinal = cv2.bitwise_and(imgInvWarp,imgFinal)
+        imgFinal = cv2.addWeighted(imgFinal, 1, imgFinal, 1, 0)
+
+        cv2.putText(imgFinal, "".join(["curve: ",str(curve)]), (20,20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
+        
+        if display == 2:
+            cv2.imshow('Display All', np.vstack((np.hstack([img,imgMask,imgHist]), np.hstack([imgWarpPoints,imgWarp, imgFinal]))))
+        elif display ==1:
+            cv2.imshow('Display Final', imgFinal)
+
 
     # Doesn't allow a curve greater than 100
     if abs(curve) > 100:
