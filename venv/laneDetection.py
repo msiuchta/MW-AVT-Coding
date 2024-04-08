@@ -2,20 +2,51 @@ import cv2
 import numpy as np
 import utils
 
-def getLaneCurve(img):
+curveList = []
+frameCounter = 0
+avgVal = 10
+# Precision of curve estimate, +avgVal -> + precision, -efficiency
+# display - 0 displays nothing, 1 displays result, 2 displays all steps
+def getLaneCurve(img, display = 2):
+    ## Creates the black and white filter
     imgMask = utils.mask(img)
 
+    ## Creates the cropped window
     h, w, c = img.shape
     points = utils.valTrackbars()
-    imgWarp = utils.warp(img,points,w,h)
-
-    # Flawless and very efficient workaround
+    imgWarp = utils.warp(imgMask,points,w,h)
+    # Creates sliders to calibrate cropped window 
     imgCopy = img.copy()
     imgWarpPoints = utils.drawPoints(imgCopy, points)
 
-    cv2.imshow('Masked Image',imgMask)
+    ## Calculates and shows the average value of the white
+    adjustedCenter, imgHist = utils.graphPoints(imgWarp, cutoff=0.5, display=True, reigon = 4)
+    center, imgHist = utils.graphPoints(imgWarp, cutoff=0.5, display=True)
+    curveRaw = center-adjustedCenter
+
+    ## Approximate curve
+    curveList.append(curveRaw)
+    if len(curveList) >= avgVal:
+        curveList.pop(0)
+    curve = (int(sum(curveList)/len(curveList)))
+    print(curve)
+
+    ## TODO: Make it look pretty
+    #print(img)
+    #print("moo")
+    #print(imgWarp)
+    #cv2.imshow('Image | Warp Points | Graphed Points', np.hstack([img,imgWarpPoints,imgHist]))
+    #cv2.imshow('Masked Image | Warped Image', np.hstack([imgMask,imgWarp]))
+    #cv2.imshow('Masked Image', np.vstack((np.hstack([img,imgWarpPoints]), np.hstack([imgMask,imgWarp]))))
+    
+    cv2.imshow('Graphed Points', imgHist)
     cv2.imshow('Warped Image',imgWarp)
     cv2.imshow('Warped Points', imgWarpPoints)
+    cv2.imshow('Masked Image', imgMask)
+    cv2.imshow('Video',img)
+
+    if abs(curve) > 1:
+        round(curve)
     return None
     
 
@@ -38,8 +69,6 @@ if __name__ == '__main__':
         success, img = cap.read()
         img = cv2.resize(img,(480,240))
         getLaneCurve(img)
-
-        cv2.imshow('Video',img)
 
         k = cv2.waitKey(1)
         if k==ord('q'):

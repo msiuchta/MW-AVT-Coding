@@ -48,10 +48,10 @@ while True:
 
     mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
     hStack = np.hstack([img,mask,result])
-    #cv2.imshow('Ori1ginal', img)
+    #cv2.imshow('Original', img)
     #cv2.imshow('HSV Color Space', imgHsv)
     #cv2.imshow('Mask', mask)
-   #cv2.imshow('Result', result)
+    #cv2.imshow('Result', result)
     cv2.imshow('Horizontal Stacking', hStack)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
