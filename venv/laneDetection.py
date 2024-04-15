@@ -11,10 +11,11 @@ def getLaneCurve(img, display = 2):
     ## Creates the black and white filter
     imgMask = utils.mask(img)
 
-    ## Creates the cropped window
+    ## Creates a cropped window
     h, w, c = img.shape
     points = utils.valTrackbars()
     imgWarp = utils.warp(imgMask,points,w,h)
+
     # Creates sliders to calibrate cropped window 
     imgCopy = img.copy()
     imgWarpPoints = utils.drawPoints(imgCopy, points)
@@ -37,7 +38,7 @@ def getLaneCurve(img, display = 2):
     #print("moo")
     #print(imgWarp)
     if display != 0:
-        imgMask = cv2.cvtColor(imgMask, cv2.COLOR_GRAY2BGR)
+        #imgMask = cv2.cvtColor(imgMask, cv2.COLOR_GRAY2BGR)
         imgWarp = cv2.cvtColor(imgWarp, cv2.COLOR_GRAY2BGR)
 
         imgInvWarp = utils.warp(imgWarp, points, w, h, invert=True)
@@ -46,12 +47,12 @@ def getLaneCurve(img, display = 2):
         imgFinal = np.zeros_like(imgInvWarp)
         imgFinal[:] = 0,255,0
         imgFinal = cv2.bitwise_and(imgInvWarp,imgFinal)
-        imgFinal = cv2.addWeighted(imgFinal, 1, imgFinal, 1, 0)
+        imgFinal = cv2.addWeighted(img, 1, imgFinal, 1, 0)
 
         cv2.putText(imgFinal, "".join(["curve: ",str(curve)]), (20,20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
         
         if display == 2:
-            cv2.imshow('Display All', np.vstack((np.hstack([img,imgMask,imgHist]), np.hstack([imgWarpPoints,imgWarp, imgFinal]))))
+            cv2.imshow('Display All', np.vstack((np.hstack([img,imgWarp,imgHist]), np.hstack([imgWarpPoints,imgInvWarp, imgFinal]))))
         elif display ==1:
             cv2.imshow('Display Final', imgFinal)
 
