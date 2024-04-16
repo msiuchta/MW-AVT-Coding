@@ -67,9 +67,14 @@ def graphPoints(img, cutoff=0.1, display=False, reigon=1):
     #print(img)
     if display:
         imgHist = np.zeros((img.shape[0],img.shape[1],3), np.uint8)
+
         # x, itensity -> index, value
         for x,intensity in enumerate(cords):
-            cv2.line(imgHist, (x,img.shape[0]), (x,img.shape[0] - int(intensity//255)), (255,255,255), 1)
+            # Avg of whitespace
+            cv2.line(imgHist, (x,img.shape[0]), (x,img.shape[0] - int(intensity//255//reigon)), (255,255,255), 1)
+            # Midpoint of image
+            cv2.line(imgHist, (img.shape[1]//2, img.shape[0]), (img.shape[1]//2, 9*img.shape[0]//10), (0,255,0), 2)
+            # Center of whitespace
             cv2.line(imgHist, (center,img.shape[0]), (center,(5*img.shape[0])//6), (0,0,255), 3)
             if reigon != 1:
                 cv2.line(imgHist, (0, img.shape[0]-img.shape[0]//reigon), (img.shape[1], img.shape[0]-img.shape[0]//reigon), (0,255,255),1)
