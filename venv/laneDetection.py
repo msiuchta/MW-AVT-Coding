@@ -11,10 +11,11 @@ def getLaneCurve(img, display = 2):
     ## Creates the black and white filter
     imgMask = utils.mask(img)
 
-    ## Creates the cropped window
+    ## Creates a cropped window
     h, w, c = img.shape
     points = utils.valTrackbars()
     imgWarp = utils.warp(imgMask,points,w,h)
+
     # Creates sliders to calibrate cropped window 
     imgCopy = img.copy()
     imgWarpPoints = utils.drawPoints(imgCopy, points)
@@ -28,16 +29,21 @@ def getLaneCurve(img, display = 2):
     curveList.append(curveRaw)
     if len(curveList) >= avgVal:
         curveList.pop(0)
+    print("curveList", (curveList))
     curve = (int(sum(curveList)/len(curveList)))
+    curve = curve/100
+
+     # Doesn't allow a curve greater than 1
+    if abs(curve) > 1:
+        print("round!")
+        curve = round(curve)
+
     print(curve)
-
-    ## TODO: Make it look pretty
-
     #print(img)
     #print("moo")
     #print(imgWarp)
     if display != 0:
-        imgMask = cv2.cvtColor(imgMask, cv2.COLOR_GRAY2BGR)
+        #imgMask = cv2.cvtColor(imgMask, cv2.COLOR_GRAY2BGR)
         imgWarp = cv2.cvtColor(imgWarp, cv2.COLOR_GRAY2BGR)
 
         imgInvWarp = utils.warp(imgWarp, points, w, h, invert=True)
@@ -46,25 +52,19 @@ def getLaneCurve(img, display = 2):
         imgFinal = np.zeros_like(imgInvWarp)
         imgFinal[:] = 0,255,0
         imgFinal = cv2.bitwise_and(imgInvWarp,imgFinal)
-        imgFinal = cv2.addWeighted(imgFinal, 1, imgFinal, 1, 0)
+        imgFinal = cv2.addWeighted(img, 1, imgFinal, 1, 0)
 
-        cv2.putText(imgFinal, "".join(["curve: ",str(curve)]), (20,20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
+        cv2.putText(imgFinal, "".join(["center: ",str(center-240)]), (20,20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
+        cv2.putText(imgFinal, "".join(["curve: ",str(curve)]), (20,38), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
         
         if display == 2:
-            cv2.imshow('Display All', np.vstack((np.hstack([img,imgMask,imgHist]), np.hstack([imgWarpPoints,imgWarp, imgFinal]))))
+            cv2.imshow('Display All', np.vstack((np.hstack([img,imgWarp,imgHist]), np.hstack([imgWarpPoints,imgInvWarp, imgFinal]))))
         elif display ==1:
             cv2.imshow('Display Final', imgFinal)
-
-
-    # Doesn't allow a curve greater than 100
-    if abs(curve) > 100:
-        round(curve, -2)
-    return None
+    return curve
     
 
 
-# Not currently working with test video, try again with camera footage.
-# Update: works with labtop camera, will likely work with pi camera.
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
 
@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
         success, img = cap.read()
         img = cv2.resize(img,(480,240))
-        getLaneCurve(img)
+        curve = getLaneCurve(img)
 
         k = cv2.waitKey(1)
         if k==ord('q'):
