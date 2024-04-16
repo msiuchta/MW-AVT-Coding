@@ -19,6 +19,7 @@ def getLaneCurve(img, display = 2):
     # Creates sliders to calibrate cropped window 
     imgCopy = img.copy()
     imgWarpPoints = utils.drawPoints(imgCopy, points)
+    
 
     ## Calculates and shows the average value of the white
     adjustedCenter, imgHist = utils.graphPoints(imgWarp, cutoff=0.5, display=True, reigon = 4)
@@ -45,10 +46,17 @@ def getLaneCurve(img, display = 2):
     if display != 0:
         #imgMask = cv2.cvtColor(imgMask, cv2.COLOR_GRAY2BGR)
         imgWarp = cv2.cvtColor(imgWarp, cv2.COLOR_GRAY2BGR)
+        # New copy
+        imgCopy = imgWarp.copy()
 
-        imgInvWarp = utils.warp(imgWarp, points, w, h, invert=True)
-        #imgInvWarp = cv2.cvtColor(imgInvWarp, cv2.COLOR_GRAY2BGR)
+        imgWarp = cv2.line(imgWarp, (0, 3*img.shape[0]//4), (img.shape[1], 3*img.shape[0]//4), (0,255,255), 1)
+        imgInvWarp2 = utils.warp(imgWarp, points, w, h, invert=True)
+
+        imgInvWarp = utils.warp(imgCopy, points, w, h, invert=True)
+        #imgInvWarp = cv2.cvtColor(imgInvWarp, cv2.COLOR_GRAY2BGR
+        
         imgInvWarp[0:h//3, 0:w] = 0,0,0
+        
         imgFinal = np.zeros_like(imgInvWarp)
         imgFinal[:] = 0,255,0
         imgFinal = cv2.bitwise_and(imgInvWarp,imgFinal)
@@ -58,12 +66,12 @@ def getLaneCurve(img, display = 2):
         cv2.putText(imgFinal, "".join(["curve: ",str(curve)]), (20,38), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
         
         if display == 2:
-            cv2.imshow('Display All', np.vstack((np.hstack([img,imgWarp,imgHist]), np.hstack([imgWarpPoints,imgInvWarp, imgFinal]))))
+            cv2.imshow('Display All', np.vstack((np.hstack([img,imgWarp,imgHist]), np.hstack([imgWarpPoints,imgInvWarp2, imgFinal]))))
         elif display ==1:
             cv2.imshow('Display Final', imgFinal)
+
     return curve
     
-
 
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
