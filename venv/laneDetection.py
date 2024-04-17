@@ -15,7 +15,6 @@ def getLaneCurve(img, display = 2):
     h, w, c = img.shape
     points = utils.valTrackbars()
     imgWarp = utils.warp(imgMask,points,w,h)
-
     # Creates sliders to calibrate cropped window 
     imgCopy = img.copy()
     imgWarpPoints = utils.drawPoints(imgCopy, points)
@@ -66,15 +65,6 @@ def getLaneCurve(img, display = 2):
         cv2.putText(imgFinal, "".join(["curve: ",str(curve)]), (20,38), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
         
         if display == 2:
-<<<<<<< HEAD
-            cv2.imshow('Display All', np.vstack((np.hstack([img,imgWarp,imgHist]), np.hstack([imgWarpPoints,imgInvWarp, imgFinal]))))
-        elif display ==1:
-            cv2.imshow('Display Final', imgFinal)
-    return curve
-    
-
-
-=======
             cv2.imshow('Display All', np.vstack((np.hstack([img,imgWarp,imgHist]), np.hstack([imgWarpPoints,imgInvWarp2, imgFinal]))))
         elif display ==1:
             cv2.imshow('Display Final', imgFinal)
@@ -82,7 +72,6 @@ def getLaneCurve(img, display = 2):
     return curve
     
 
->>>>>>> neural-network
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
 
