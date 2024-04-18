@@ -14,7 +14,7 @@ def getImg(display=False, size=[480,240]):
 	
 def main():
 	img = getImg()
-	# Returns a curve [100,-100]
+	# Returns a curve [1,-1]
 	curve = getLaneCurve(img, 1)
 	
 	sens = 1.3
