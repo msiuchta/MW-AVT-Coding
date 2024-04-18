@@ -38,8 +38,11 @@ class Loss_CategorialCrossEntropy(Loss):
         
         if len(y_true.shape) == 1:
             correct_confidences = y_pred_clipped[range(samples), y_true]
-        elif (leny_true.shape) == 2:
+        elif len(leny_true.shape) == 2:
             correct_confidences = np.sum(y_pred_clipped*y_true, axis=1)
+
+        negative_log_liklihood -np.log(correct_confidences)
+        return negative_log_liklihood
 
 print(0.1*np.random.randn(4,3))
 layer1 = Layer_Dense(4, 5) 
