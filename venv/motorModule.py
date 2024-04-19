@@ -85,6 +85,10 @@ def main():
     motor1.stop(2)
     motor1.move(0, -0.5, 2)
     motor1.stop(2)
+    motor2.move(0.5, 0.2)
+    motor2.stop(2)
+    motor2.move(-0.5, 0.2)
+    motor2.stop(2)
     
 # GPIO PINS and allows script to be executed directly from this module for testing
 if __name__ == '__main__':
