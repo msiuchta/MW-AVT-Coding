@@ -29,16 +29,18 @@ def getLaneCurve(img, display = 2):
     curveList.append(curveRaw)
     if len(curveList) >= avgVal:
         curveList.pop(0)
-    print("curveList", (curveList))
     curve = (int(sum(curveList)/len(curveList)))
     curve = curve/100
 
      # Doesn't allow a curve greater than 1
     if abs(curve) > 1:
         print("round!")
-        curve = round(curve)
+        if curve > 1:
+            curve = 1
+        elif curve < -1:
+            curve = -1
 
-    print(curve)
+    #print(curve)
     #print(img)
     #print("moo")
     #print(imgWarp)
@@ -62,14 +64,14 @@ def getLaneCurve(img, display = 2):
         elif display ==1:
             cv2.imshow('Display Final', imgFinal)
 
-    return curve
+    return center, curve
     
 
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
 
-    # Values of the array can be changed
-    utils.initializeTrackbars([100 ,80 ,20 ,210])
+    # Values of the array can be changed. Top Width / Top Height / Bottom Width/ Bottom Height
+    utils.initializeTrackbars([50 ,100 ,50 ,150])
     frames = 0
     while True:
         # loops a pre-recorded video

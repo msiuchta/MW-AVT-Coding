@@ -18,7 +18,7 @@ def main():
 	curve = getLaneCurve(img, 1)
 	
 	sens = 1.3
-	maxSpeed = 0 
+	maxSpeed = 0.3
 	if curve > maxSpeed:
 		curve = maxSpeed
 	elif curve < -maxSpeed:
@@ -26,7 +26,7 @@ def main():
 
 	if curve > 0:
 		sen=1.7
-		# 0.05 deadzone
+		# 0.05, -0.08 deadzone
 		if curve < 0.05: 
 			curve = 0
 	else:

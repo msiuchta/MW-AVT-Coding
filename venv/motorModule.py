@@ -30,41 +30,52 @@ class Motor():
         self.mySpeed = 0
     
     # Function to Move
-    def move(self, speed = 0.5, turn = 0, t = 0):
-        speed *= 100
-        turn *= 70
-        leftSpeed = speed - turn
-        rightSpeed = speed + turn
+    def move(motorL, motorR, speed=0.5, turn=0.5, t=0):
         
-        if leftSpeed > 100:
-            leftSpeed = 100
-        elif leftSpeed < -100:
-            leftSpeed = -100
-            
-        if rightSpeed > 100:
-            rightSpeed = 100
-        elif rightSpeed < -100:
-            rightSpeed = -100
-            
-        self.pwmA.ChangeDutyCycle(abs(leftSpeed))
-        self.pwmB.ChangeDutyCycle(abs(rightSpeed))
         
         # Move Forward, have to check if ina1 and a2 are connected
         # to left or right wheels
-        if leftSpeed > 0:
-            IO.output(self.in1A, IO.HIGH)
-            IO.output(self.in2A, IO.LOW)
+        speed *= 100
+        turn  *= 70
+        leftSpeed = speed - turn
+        rightSpeed = speed + turn
+
+        if abs(leftSpeed) > 100:
+            round(leftSpeed, 2)
+        if abs(rightSpeed) > 100:
+            round(rightSpeed, 2)
+
+        motorL.pwmA.ChangeDutyCycle(abs(leftSpeed))
+        motorL.pwmB.ChangeDutyCycle(abs(leftSpeed))
+        motorR.pwmA.ChangeDutyCycle(abs(rightSpeed))
+        motorR.pwmB.ChangeDutyCycle(abs(rightSpeed))
+
+        motorR.move(rightSpeed)
+        motorL.move(leftSpeed)
+
+        if leftSpeed > 0:   
+            IO.output(motorL.in1A, IO.LOW)
+            IO.output(motorL.in2A, IO.HIGH)
+            IO.output(motorL.in1B, IO.LOW)
+            IO.output(motorL.in1B, IO.HIGH)
+
         # Move Backward
         else:
-            IO.output(self.in1A, IO.LOW)
-            IO.output(self.in2A, IO.HIGH)
+            IO.output(motorL.in1A, IO.LOW)
+            IO.output(motorL.in2A, IO.LOW)
+            IO.output(motorL.in1B, IO.HIGH)
+            IO.output(motorL.in1B, IO.HIGH)
             
         if rightSpeed > 0:
-            IO.output(self.in1B, IO.HIGH)
-            IO.output(self.in2B, IO.LOW)
+            IO.output(motorR.in1A, IO.HIGH)
+            IO.output(motorR.in2A, IO.LOW)
+            IO.output(motorR.in1B, IO.HIGH)
+            IO.output(motorR.in1B, IO.LOW)
         else:
-            IO.output(self.in1B, IO.LOW)
-            IO.output(self.in2B, IO.HIGH)
+            IO.output(motorR.in1A, IO.LOW)
+            IO.output(motorR.in2A, IO.HIGH)
+            IO.output(motorR.in1B, IO.LOW)
+            IO.output(motorR.in1B, IO.HIGH)
             
         sleep(t)
         
@@ -74,6 +85,9 @@ class Motor():
         self.mySpeed = 0
         print("stopped")
         sleep(t)
+      
+            
+        
         
 # for testing
 def main():
@@ -97,3 +111,4 @@ if __name__ == '__main__':
     #left side
     motor2 = Motor(4, 17, 27, 12, 1, 7)
     main()
+
