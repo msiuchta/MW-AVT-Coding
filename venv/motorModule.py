@@ -50,9 +50,6 @@ class Motor():
         motorR.pwmA.ChangeDutyCycle(abs(rightSpeed))
         motorR.pwmB.ChangeDutyCycle(abs(rightSpeed))
 
-        motorR.move(rightSpeed)
-        motorL.move(leftSpeed)
-
         if leftSpeed > 0:   
             IO.output(motorL.in1A, IO.LOW)
             IO.output(motorL.in2A, IO.HIGH)
