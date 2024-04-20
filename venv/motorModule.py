@@ -100,15 +100,23 @@ Backup move // turn is negative for left, positive for right
         if leftSpeed > 0:
             IO.output(self.in1A, IO.HIGH)
             IO.output(self.in2A, IO.LOW)
+            IO.output(self.in1B, IO.HIGH)
+            IO.output(self.in2B, IO.LOW)
         # Move Backward
         else:
             IO.output(self.in1A, IO.LOW)
             IO.output(self.in2A, IO.HIGH)
+            IO.output(self.in1B, IO.LOW)
+            IO.output(self.in2B, IO.HIGH)
             
         if rightSpeed > 0:
+            IO.output(self.in1A, IO.HIGH)
+            IO.output(self.in2A, IO.LOW)
             IO.output(self.in1B, IO.HIGH)
             IO.output(self.in2B, IO.LOW)
         else:
+            IO.output(self.in1A, IO.LOW)
+            IO.output(self.in2A, IO.HIGH)
             IO.output(self.in1B, IO.LOW)
             IO.output(self.in2B, IO.HIGH)
             
@@ -123,18 +131,10 @@ Backup move // turn is negative for left, positive for right
         
 # for testing
 def main():
-    motor1.move(0.5, 0.2)
-    motor1.stop(2)
-    motor1.move(-0.5, 0.2)
-    motor1.stop(2)
-    motor1.move(0, 0.5, 2)
-    motor1.stop(2)
-    motor1.move(0, -0.5, 2)
-    motor1.stop(2)
-    motor2.move(0.5, 0.2)
-    motor2.stop(2)
-    motor2.move(-0.5, 0.2)
-    motor2.stop(2)
+    motorR.move(0.5, 0.2, 2)
+    motorR.stop(2)
+    motorL.move(0.5, 0.2, 2)
+    motorL.stop(2)
     
 # GPIO PINS and allows script to be executed directly from this module for testing
 if __name__ == '__main__':
