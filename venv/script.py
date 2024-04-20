@@ -15,14 +15,23 @@ def getImg(display=False, size=[480,240]):
 def main():
 	img = getImg()
 	# Returns a curve [1,-1]
-	curve = getLaneCurve(img, 1)
-	
+	center, curve = getLaneCurve(img, 1)
+	difference = center-120
+
 	sens = 1.3
 	maxSpeed = 0.3
 	if curve > maxSpeed:
 		curve = maxSpeed
 	elif curve < -maxSpeed:
 		curve = -maxSpeed
+	
+	# Prevents drifting
+	if abs(difference) > 120:
+		curve = difference/255
+
+	
+
+
 
 	if curve > 0:
 		sen=1.7
